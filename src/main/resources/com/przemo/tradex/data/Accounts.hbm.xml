@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2014-02-13 15:12:34 by Hibernate Tools 3.2.1.GA -->
+<hibernate-mapping>
+    <class name="com.przemo.tradex.data.Accounts" table="accounts" schema="public">
+        <id name="id" type="int">
+            <column name="id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="users" class="com.przemo.tradex.data.Users" fetch="select">
+            <column name="users_id" not-null="true" />
+        </many-to-one>
+        <property name="accountNumber" type="int">
+            <column name="account_number" not-null="true" />
+        </property>
+        <property name="balance" type="double">
+            <column name="balance" precision="17" scale="17" not-null="true" />
+        </property>
+        <property name="active" type="boolean">
+            <column name="active" not-null="true" />
+        </property>
+        <set name="accountsHistories" inverse="true">
+            <key>
+                <column name="accounts_id" not-null="true" />
+            </key>
+            <one-to-many class="com.przemo.tradex.data.AccountsHistory" />
+        </set>
+    </class>
+</hibernate-mapping>

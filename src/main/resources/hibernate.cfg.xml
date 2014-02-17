@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+  <session-factory>
+    <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</property>
+    <property name="hibernate.connection.driver_class">org.postgresql.Driver</property>
+    <property name="hibernate.connection.url">jdbc:postgresql://192.168.1.79:5432/tradex</property>
+    <property name="hibernate.connection.username">przemo</property>
+    <property name="hibernate.connection.password">derek</property>
+    <mapping resource="com/przemo/tradex/data/Transactions.hbm.xml"/>
+    <mapping resource="com/przemo/tradex/data/Equities.hbm.xml"/>
+    <mapping resource="com/przemo/tradex/data/Orders.hbm.xml"/>
+    <mapping resource="com/przemo/tradex/data/AccountTypes.hbm.xml"/>
+    <mapping resource="com/przemo/tradex/data/AccountsHistory.hbm.xml"/>
+    <mapping resource="com/przemo/tradex/data/News.hbm.xml"/>
+    <mapping resource="com/przemo/tradex/data/Users.hbm.xml"/>
+    <mapping resource="com/przemo/tradex/data/EquitiesTypes.hbm.xml"/>
+    <mapping resource="com/przemo/tradex/data/Accounts.hbm.xml"/>
+    <mapping resource="com/przemo/tradex/data/UserSessions.hbm.xml"/>
+    <mapping resource="com/przemo/tradex/data/OrderTypes.hbm.xml"/>
+    <mapping resource="com/przemo/tradex/data/EquitiesPriceHistory.hbm.xml"/>
+  </session-factory>
+</hibernate-configuration>

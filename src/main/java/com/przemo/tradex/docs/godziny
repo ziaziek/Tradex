@@ -1,0 +1,41 @@
+Plik rejestracji czasu spedzonego nad projektem.
+
+25/01/2014 Specyfikacja - 0,5h
+
+26/01/2014 Specyfikacja, skrypt bazy danych - 1,5h
+
+28/01/2014 Specyfikacja (server side) - 1h
+
+29/01/2014 Specyfikacja serwer - autentykacja i wybór technologii - 1h
+
+01/02/2014 Próby RMI serwer - 5h (próby nieudane)
+
+02/02/2014 UML, RMI proby(udane) - 2h
+
+04/02/2014 RMI Interfaces, database set-up - 2,5h
+
+07/02/2014 database re-setup - 1,5h
+
+07/02/2014 hibernate mappings and POJO creation - 0,5h
+------------------------------------------------------
+Total time so far:          15,5h
+
+08/02/2014 RMI login controller implementation, turning to Maven, unit testing for session id generation 1,5h
+
+10/02/2014 login controller implementation - login and logout (testing) (14:30 -17:30) 3h (not finished) (22:05-00:00) 2h
+
+11/02/2014 login controller tests - hibernate id generation problem (set genrator to "identity"), edit user data in IInfoController 1,5h
+------------------------------------------------------
+Total time so far:          23,5h
+
+11/02/2014 IInfoController implementations 1h
+
+12/02/2014 IInfoController implementation and tests 3h
+
+13/02/2014 InfoController testing, LoginController testing rebuilt of the database, remapping Hibernate object, restructuring 5,5h
+
+15/02/2014 InfoController requestEditData function - 0,67h
+
+16/02/2014 InfoController test and user data edit implementation - UserSessions don't seem to hold proper information about Users! - 0,5h (Fixed - set lazy to False for UserSessions)
+
+17/02/2014 SQL scripts for fake data, script for db truncation, IInfoController tests - succesful 0,5h

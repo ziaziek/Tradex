@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2014-02-13 15:12:34 by Hibernate Tools 3.2.1.GA -->
+<hibernate-mapping>
+    <class name="com.przemo.tradex.data.Equities" table="equities" schema="public">
+        <id name="id" type="int">
+            <column name="id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="equitiesTypes" class="com.przemo.tradex.data.EquitiesTypes" fetch="select">
+            <column name="equity_type" />
+        </many-to-one>
+        <property name="equitySymbol" type="string">
+            <column name="equity_symbol" length="10" not-null="true" unique="true" />
+        </property>
+        <property name="bidPrice" type="double">
+            <column name="bid_price" precision="17" scale="17" not-null="true" />
+        </property>
+        <property name="askPrice" type="double">
+            <column name="ask_price" precision="17" scale="17" not-null="true" />
+        </property>
+        <property name="description" type="string">
+            <column name="description" />
+        </property>
+        <set name="equitiesPriceHistories" inverse="true">
+            <key>
+                <column name="equity" />
+            </key>
+            <one-to-many class="com.przemo.tradex.data.EquitiesPriceHistory" />
+        </set>
+        <set name="orderses" inverse="true">
+            <key>
+                <column name="equities_id" not-null="true" />
+            </key>
+            <one-to-many class="com.przemo.tradex.data.Orders" />
+        </set>
+        <set name="transactionses" inverse="true">
+            <key>
+                <column name="equity_id" not-null="true" />
+            </key>
+            <one-to-many class="com.przemo.tradex.data.Transactions" />
+        </set>
+    </class>
+</hibernate-mapping>

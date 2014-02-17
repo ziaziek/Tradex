@@ -1,0 +1,186 @@
+Symulator handlu na rykach finansowych.
+
+Technologia - Java, Swing, Klient-Serwer, Hibernate, JFreeChart, PostgreSQL
+
+Technologia klient-serwer ma za zadanie rozdzielenie funkcjonalnosci klienta i odizolowanie go od danych zgromadzonych w bazie danych.
+To pozwala na latwosc i gietkosc rozwiazan. Klient i serwer beda mialy wspolny kontrakt, ale cala reszta jest mozliwa do rozwoju
+i modyfikacji niezaleznie.
+Stad tez mozliwe jest postawienie niemal kazdej bazy danych, czy niezalezny rozwoj i udoskonalanie zarowno serwera, jak i klienta.
+
+Klient - graficzny interfejs przezntujacy wykresy, dane, umozliwiajacy skladanie zlecen, prezentujacy stan konta i historie transakcji.
+
+Serwer - przekazuje klientowi dane z bazy danych. Pełni warstwę pośrednią. Wystawia serwisy, albo w formie Restful, SOAP, RMI itp.
+
+Kazde zapytanie musi byc potwierdzone tozsamoscia klienta (?). 
+
+----------------------------------
+
+Baza danych. Struktura (skrypt). Dialekt PostgreSQL
+
+Logowanie TCP/IP, przy uzyciu hasel md5 oraz klucza sesji, generowanego przez serwer aplikacji.
+
+Uzywamy zalozen, ze gotowka (srodki finansowe) sa w equity pod id=1.
+Tak samo uzytkownik o id=1 jest to system, jesli nie dochodzi do rzeczywistej transakcji miedzy uzytkownikami.
+W naszym przypadku tak bedzie zawsze, bowiem jest to symulator a nie rzeczywisty rynek, ktory bysmy animowali.
+Podobnie rzecz sie ma ogolnie u brokerow, bowiem oni nie prowadza rzeczywistej wymiany handlowej miedzy uzytkownikami,
+a jedynie miedzy uzytkowikiem a wlasnym systemem, ktory w odpowiedzio na zlozone zlecenie mozse stosowac
+jakas technike zabezpieczajaca na szerokim prawdzwym rynku.
+
+Skonstruowany ponizej schemat jest przystosowany do prowadzenia rynku rzeczywistego, gdzie wymiana handlowa odbywa sie w czasie rzeczywistym
+miedzy uczestnikami rynku.
+Z powodzeniem jednak moze zostac zastosowana w przypadku symulatora czy systemu brkerskiego, gdzie uzytkownicy nie handluja, a bardziej
+obstawiaja symulujac sprzedaz/kupno. Nalezy jedynie poczynic zalozenia co do tego, kim jest uzytkoenik System i stworzyc takiego specjalnego
+uzytkownika. Serwer bedzie wowczas rejestrowal wszystkie transakcjie jako transakcje miedzy zarejestrowanm uzytkownikiem a Systemem.
+
+create table users(id serial not null primary key,
+                    username varchar(50) not null unique,
+                    password varchar(50) not null,
+                    last_ip_login ip,
+                    last_login timestamp not null);
+
+create table account_types(id serial not null primary key,
+                            account_name varchar(50) not null,
+                            account_description text);
+
+create table accounts(id serial not null primary key,
+                        users_id integer not null references users(id),
+                        account_number integer not null,
+                        balance double precision not null default 0.00,
+                        active boolean not null default 'True');
+
+create table accounts_history(id bigserial primary key,
+                        accounts_id integer not null references accounts(id), #Czy konta zmieniaja wlascicieli? Zakładamy, że nie, czyli jedno konto ma jednego właściciela przez cały czas istnienia
+                        transactions_id bigint not null references transactions(id),
+                        balance double precision not null,
+                        entry_date timestamp not null default current_timestamp());
+
+create table equities_types(id serial primary key,
+                            type_name varchar(50),
+                            description text);
+#W tej tabeli znajduja sie dane ask i bid, ktore NIE sa konsekwencja tabeli orders, poniewaz to nie my prowadzimy ten rynek, a jedynie
+#jestesmy posrednikami. Generalnie dla celów szkoleniowych, ta tabela będzie wypełniona już danymi, które będą pobieane przez serwer i dostarczane
+#zarejestrowanym klientom.
+create table equities(id serial primary key,
+                        equity_symbol varchar(10) not null,
+                        bid_price double precision not null,
+                        ask_price double precision not null,
+                        when timestamp,
+                        description text);
+
+create table transactions(id bigserial not null primary key,
+                            equity_id integer not null references equities(id),
+                            buyer_order_id integer not null references orders(id),
+                            seller_order_id integer not null references orders(id),
+                            quantity double precision not null check >0,
+                            price double precision not null check > 0,
+                            transaction_date timestamp not null default current_timestamp());
+
+
+create table order_types(id serial primary key,
+                            order_type varchar(2) not null,
+                            description text not null);
+
+create table orders(id bigserial primary key,
+                    users_id integer not null references users(id),
+                    equities_id integer not null references equities(id),
+                    quantity double precision not null check >0,
+                    initial_quantity double precision not null default quantity,
+                    valid_thru timestamp,
+                    order_types_id integer not null references order_types(id),
+                    min_quantity double precision not null default 0.0);
+
+create table user_sessions(id bigserial primary key,
+                            users_id integer not null references users(id),
+                            login_time timestamp not null,
+                            logout_time timestamp,
+                            session_key varchar(128) not null,
+                            expiry_date not null timestamp,
+                            login_ip ip);
+
+#Ta tabela tez powinna byc wypelniona tak, zeby serwer w danym momencie mogl pobrac wiadomosc i wyswietlic klientom.                            
+create table news(id serial primary key,
+                    issue_date timestamp not null default current_timestamp(),
+                    title varchar(50) not null,
+                    contents text);
+                     
+-----------------
+
+Serwer aplikacji.
+Dla serwera aplikacji zostanie utworzone konto dostępowe na serwerze bazy danych.
+
+Jeśli RMI:
+Serwer będzie udostępniał interfejsy dla klientów, które będą  pozwalały na uzyskiwanie zalogowanej sesji, danych wskazanego instrumentu,
+danych użytkownika wraz z jego hstoria transakcji, oraz składania zleceń.
+
+------ Składanie zleceń i zawieranie transakcji --------
+Serwer będzie składać zlecenie w bazie danych w tabeli orders.
+Serwer DB wykona wpis i za pomoca triggera skonfrontuje zlecenie z pozostałymi i wykona transakcje,
+jeśli takie zajdą, uaktualni tabelę transakcji oraz konta użytkowników.
+W naszym przypadku funkcjonalność ta będzie uproszczona - jako że jest to symulacja i/lub jandel z brokerem,
+złożenie zlecenia będzie skutkować sprawdzeniem aktualnego kursu i wykonaniem go, jeśli cena jest równa lub niższa
+aktualnej ask w przypadku sprzedaży, lub równa lub wyższa od bid w przypadku kupna.
+
+
+Serwer musi wysyłać zapytania do DB, czy dane zlecenie zostało zrealizowane. Jeśli tak, 
+
+--Sockety---
+wysłać klientom informację o tym fakcie. Musi więc utraymywać żywe połączenie z klientami jako nasłuchiwaczami.
+Komunikacja zatem odbywać się będzie przy użyciu socketów(?).
+Klient łącząc się do serwera, po przejściu procesu autentykacji, jest rejestrowany jako nowy socket (ip, port),
+przez który serwer wysyła wiadomości.
+W tym przypadku konieczne jest ustalenie wspólnego protokołu komunikacji między klientami i serwerem.
+
+--RMI--
+Zdefiniowac interfejsy i klasy serwera. Interfejsy serwisowe będą te same na klientach.
+Autentykacja może odbywać się w konstruktorach klas serwera lub samych procedurach wywoływanych (przez 
+znacznik sesji uzyskany przez klienta po udanej autentykacji).
+To oznacza, że i tak nadal musimy w wywolaniach przekazywać znacznik uwierzytelnionej sesji, co nie jest problemem
+samym w sobie, ale nie wiem czy daje duży zysk nad rozwiązaniem przy użyciu komunikacji restful.
+
+----RESTful z autentykacją----
+Ewentualnie możliwość przesyłania komunikatów RESTful(?) - bardzo prosta metoda komunikacji z klientami,
+ale czy istnieje możliwość autentykacji? 
+Jedna z możliwości to generowanie klucza sesji, który jest zapisywant w bazie danych po pozytywnej autentykacjiklienta.
+Następnie klucz przekazywany jest klientowi, a ten za każdym razem przesyła tylko ten klucz w zapytaniu. Po tym kluczu
+wnioskowane jest id klienta (użytkownika) i wysyłane zapytania do bazy danych dla danego użytkownika.
+
+---Wnioski----
+Zbudujemy serwer z możliwością obsługi RESTful oraz RMI.
+Pierwszą rzeczą, jaką robi klient jest prośba o zalogowanie.
+W odpowiedzi serwer wysyła znacznik sesji, który zostanie zapisany w tabeli sessions wraz z id użytkownika, 
+jeśli logowanie przebiegło pomyślnie lub informację o błędzie w przeciwnym wypadku.
+
+Klient musi przytrzymać znacznik sesji i wysyłać go z każdym żądaniem.
+Serwer pobierze informację z DB, czy dany znacznik ma zautoryzowaną sesję i będzie procedować dalej, jeśli tak jest.
+---Sesje---
+Sesje mogą mieć określony czas życia. Oznacza to, że po upływie tego czasu, obsługa tej sesji będzie niemożliwa
+i konieczne będzie kolejne zalogowanie.
+Czas życia sesji może być ruchomy - ustalany na podstawie czasu danego zapytania + interwał,
+lub stały - koniec sesji jest określony niezmiennie.
+Tabela sessions_users będzie musiała być okresowo czyszczona przez proces zewnętrzny, aby jej obsługa była
+sprawna, jako że może się w niej znajdowac bardzo dużo rekordów, trudnych do przeszukiwania (varchar).
+
+W dalszej części możliwe jest również zastosowanie protokołu SSH.
+
+
+----Maven i projekt ---
+Wszystkie pliki projektowe typu konfiguracja hibernate, pliki mapowania itp. muszą być w folderze src/main/resources pod odpowiednimi pakietami.
+Jeśli korzystasz z slf4j, musi być on dodatkowo dołączony do zależności, mimo posiadania go podpiętego przez inny projekt!
+
+
+----Składanie zleceń---
+Złożenie zlecenia przez klienta nie skutkuje natychmiastową jego realizacją. Złożenie zlecenia jest operacją atomową
+i polega tylko na zapisaniu go w tabeli zleceń.
+Musi istnieć dodatkowy proces, który będzie zlecenia realizował, spoglądając na tabelę i wyszukując zlecenia wedle dat wpłynięcia
+i w miarę możliwości ich realizcję.
+
+W naszym przypadku taki procesor zleceń (transakcji) będzie miał formę uproszczoną, bowiem nie istnieją zlecenia przeciwstawne jako uczestników
+rynku, a jedynie zlecenia bezpośrednio rynkowe.
+Procesor będzie w takim razie realizował zlecenie, jeśli w momencie złożenia było ono realizowalne w porównaniu ze stanem rynku.
+Procesor spogląda również na inne zlecenia otwarte i sprawdza, czy w danym momencie nie można ich zrealizować.
+W normalnym przypadku, procesor po wykonaniu transakcji aktualizowałby tabelę z aktualnymi stanami cen danego aktywu.
+Nasz procesor będzie jedynie pobierał z tabeli historycznej i uaktualniał tabelę cen obecnych.
+Zaimplementujemy ten mechanizm, aby zachować uniwersalność całego systemu.
+W uproszczeniu można by jedynie posiadać tabelę historyyczną oraz licznik czasu na serwerze, który zmieniałby się i wskazywał na dany moment
+w historii cen. To wymagałoby wprowadzenia dodatkowego pola - czasu lub id z historii, według którego zrealizowano zlecenie. 
+Następnie klienty będą mogły pobrać informację o stanie realizacji transakcji z serwera.

@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2014-02-13 15:12:34 by Hibernate Tools 3.2.1.GA -->
+<hibernate-mapping>
+    <class name="com.przemo.tradex.data.Transactions" table="transactions" schema="public">
+        <id name="id" type="long">
+            <column name="id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="ordersByBuyerOrderId" class="com.przemo.tradex.data.Orders" fetch="select">
+            <column name="buyer_order_id" not-null="true" />
+        </many-to-one>
+        <many-to-one name="equities" class="com.przemo.tradex.data.Equities" fetch="select">
+            <column name="equity_id" not-null="true" />
+        </many-to-one>
+        <many-to-one name="ordersBySellerOrderId" class="com.przemo.tradex.data.Orders" fetch="select">
+            <column name="seller_order_id" not-null="true" />
+        </many-to-one>
+        <property name="quantity" type="double">
+            <column name="quantity" precision="17" scale="17" not-null="true" />
+        </property>
+        <property name="price" type="double">
+            <column name="price" precision="17" scale="17" not-null="true" />
+        </property>
+        <property name="transactionDate" type="timestamp">
+            <column name="transaction_date" length="29" not-null="true" />
+        </property>
+        <set name="accountsHistories" inverse="true">
+            <key>
+                <column name="transactions_id" not-null="true" />
+            </key>
+            <one-to-many class="com.przemo.tradex.data.AccountsHistory" />
+        </set>
+    </class>
+</hibernate-mapping>

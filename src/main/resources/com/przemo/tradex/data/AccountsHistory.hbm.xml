@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2014-02-13 15:12:34 by Hibernate Tools 3.2.1.GA -->
+<hibernate-mapping>
+    <class name="com.przemo.tradex.data.AccountsHistory" table="accounts_history" schema="public">
+        <id name="id" type="long">
+            <column name="id" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="transactions" class="com.przemo.tradex.data.Transactions" fetch="select">
+            <column name="transactions_id" not-null="true" />
+        </many-to-one>
+        <many-to-one name="accounts" class="com.przemo.tradex.data.Accounts" fetch="select">
+            <column name="accounts_id" not-null="true" />
+        </many-to-one>
+        <property name="balance" type="double">
+            <column name="balance" precision="17" scale="17" not-null="true" />
+        </property>
+        <property name="entryDate" type="timestamp">
+            <column name="entry_date" length="29" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

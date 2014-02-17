@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 2014-02-13 15:12:34 by Hibernate Tools 3.2.1.GA -->
+<hibernate-mapping>
+    <class name="com.przemo.tradex.data.News" table="news" schema="public">
+        <id name="id" type="int">
+            <column name="id" />
+            <generator class="identity" />
+        </id>
+        <property name="issueDate" type="timestamp">
+            <column name="issue_date" length="29" not-null="true" />
+        </property>
+        <property name="title" type="string">
+            <column name="title" length="50" not-null="true" />
+        </property>
+        <property name="contents" type="string">
+            <column name="contents" />
+        </property>
+    </class>
+</hibernate-mapping>
