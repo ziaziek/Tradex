@@ -70,6 +70,9 @@ public interface IInfoController extends Remote{
      */
     List<EquitiesTypes> requestCurrentEquitiesTypes() throws RemoteException;
    
+    
+    List<OrderTypes> requestAvailableOrderTypes() throws RemoteException;
+    
     /**
      * Edit user data. Make sure that the name of the user cannot be changed.
      * @param sessionId
