@@ -21,4 +21,10 @@
             <column name="record_date" length="29" />
         </property>
     </class>
+    <query name="findEquitiesAtDate">
+        <![CDATA[from EquitiesPriceHistory where recordDate=( select max(recordDate) from EquitiesPriceHistory where recordDate<=:dt)]]>
+    </query>
+    <query name="findEquitiesBetweenDates">
+        <![CDATA[from EquitiesPriceHistory where recordDate>=:df and recordDate<=:dt and equities=:eqid]]>
+    </query>
 </hibernate-mapping>

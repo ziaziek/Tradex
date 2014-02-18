@@ -55,7 +55,7 @@ public interface IInfoController extends Remote{
      * @param sessionId session id
      * @return information of price changes and ranges
      */
-    List<Equities> requestTimeRangeData(Date dateFrom, Date Date, int equityId, String sessionId) throws RemoteException;
+    List<EquitiesPriceHistory> requestTimeRangeData(Date dateFrom, Date Date, Equities equityId, String sessionId) throws RemoteException;
     
     /**
      * Requests information about the account
