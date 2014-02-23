@@ -184,3 +184,36 @@ Zaimplementujemy ten mechanizm, aby zachować uniwersalność całego systemu.
 W uproszczeniu można by jedynie posiadać tabelę historyyczną oraz licznik czasu na serwerze, który zmieniałby się i wskazywał na dany moment
 w historii cen. To wymagałoby wprowadzenia dodatkowego pola - czasu lub id z historii, według którego zrealizowano zlecenie. 
 Następnie klienty będą mogły pobrać informację o stanie realizacji transakcji z serwera.
+
+
+----klient----
+Klient pozwala użytkownikowi na zarządzanie swoim kontem i składanie, anulowanie zleceń na rynku.
+Klient pełni zatem rolę front-end'owego interfejsu pomiędzy użytkownikiem a serwerem.
+Rola ta oprócz nawiązania i prowadzenia komunikacji w odpowiedni sposób z serwerem, polega równnież na prezentacji otrzymanych wyników.
+Klient posiada zatem oprócz interfejsu komunikacyjnego również pakiet graficzny, graficzny interfejs użytkownika.
+Interfejs może byż zbudowany przy użyciu stworzonego wcześniej pakietu Gubas lub pakietu JIDE.
+Do prezentacji wykresów używać będziemy JFreeChart. Możliwe jest dzięki temu wykorzystanie kontrolek z pakietu Gubas.
+Również animowane tabele, jeśli nie będzie odpowiedników, lub konieczności użycia specjalnych tabel z pakietu JIDE, mogą być pobrane z Gubas'a.
+Ewentualnie można stworzyć dodatkowe obiekty dziedziczone z JIDE, implemntujące animowane przejścia, jak w Gubas'ie, z użyciem
+ComponentAnimationManager'a.
+
+Co może zrobić użytkownik:
+- zalogować się
+- sprawdzić historię logowania
+- zmienić dane użytkownika (na razie hasło)
+- złożyć zlecenie
+- zmodyfikować/ usunąć zlecenie
+- sprawdzić historię zleceń
+- sprawdzić historię konta
+- wybrać instrumenty w różnych oknach i określić długość trwania bar'ów - tick, 1min, 5min, 10min, 15min, 30min, 1H, 4H
+- pobrać dane historyczne dla dowolnego instrumentu i określić długość bar'u.
+- Wstawić instrumenty analizy na wykresie oraz określić ich parametry (moving average, weighted average, etc.)
+- wylogować się.
+
+-----Struktura projektu------
+Proponuje się utworzenie dwóch projektów:
+- TradexClient - zawiera podstawowe środowisko klienta z odwołaniami do serwera, w zależnościach posiada Gubas i/lun JIDE oraz Tradex - zestaw interfajsów
+                    do komunikacji z serwerem oraz posiadający opis struktury danych,
+- TradexGraphs - obsługa wykresów, prezentacji, dodawania i obliczania parametrów wskaźników analizy technicznej. Pakiet posiada zależność
+                    JFreeChart i/lub Gubas, z kontrolką i faktorią do tworzenia wykresów. Ponadto proponuje się dodanie zależności do
+                    Apache Common Maths w celu uzyskania szybkich obliczeń statystycznych niezbędnych do obliczenia położeń wskaźników AT.

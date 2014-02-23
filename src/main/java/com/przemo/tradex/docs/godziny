@@ -43,3 +43,7 @@ Total time so far:          23,5h
 17/02/2014 OrdersController and tests 0,75h
 
 18/02/2014 InfoController last functions - 1h
+
+22/02/2012 InfoControllerTest - 0,5h passed, except for those which required presence of data in the database
+
+23/02/2014 Specification for the client. Creation of TradexClient and TradexGraphs projects with dependecies, setting up GIT repos 1,0 h
