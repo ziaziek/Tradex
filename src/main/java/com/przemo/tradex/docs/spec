@@ -217,3 +217,42 @@ Proponuje się utworzenie dwóch projektów:
 - TradexGraphs - obsługa wykresów, prezentacji, dodawania i obliczania parametrów wskaźników analizy technicznej. Pakiet posiada zależność
                     JFreeChart i/lub Gubas, z kontrolką i faktorią do tworzenia wykresów. Ponadto proponuje się dodanie zależności do
                     Apache Common Maths w celu uzyskania szybkich obliczeń statystycznych niezbędnych do obliczenia położeń wskaźników AT.
+
+Layout klienta.
+Menu główne - górna belka
+Okna wewnątrz okna głównego, czyli tzw MDI. Możliwość zachowania layoutów.
+Istnioeje jeden Default layout, którego nie można nadpisać i do którego można zawsze wrócić. 
+Użytkownicy mogą tworzyć layouty i zapisywać je pod różnymi nazwami a następnie ładować w razie potrzeby.
+Bieżący layout zapisywany jest przy zamykaniu aplikacji a następnie odtwarzany przy jej ponownym uruchomieniu.
+Jeśli nie ma ostatniego layoutu, używa się defaultowego.
+
+Menu klienta:
+File
+    Connect
+    Disconnect    
+    Exit
+
+Equities
+    Show Available
+    Reload Available
+    Open Equity Chart Window
+
+Data
+    Download Data
+    Server settings
+
+Trade
+    Place Order
+    Remove Order
+    Remove All Orders
+    Set order trigger
+    Stop order trigger
+
+Workspace
+    Load Workspace
+    Save workspace
+    Load Default Workspace
+
+Help
+    About
+    Help index

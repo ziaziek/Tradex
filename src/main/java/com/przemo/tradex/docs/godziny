@@ -34,7 +34,7 @@ Total time so far:          23,5h
 
 13/02/2014 InfoController testing, LoginController testing rebuilt of the database, remapping Hibernate object, restructuring 5,5h
 
-15/02/2014 InfoController requestEditData function - 0,67h
+15/02/2014 InfoController requestEditData function - 0,75h
 
 16/02/2014 InfoController test and user data edit implementation - UserSessions don't seem to hold proper information about Users! - 0,5h (Fixed - set lazy to False for UserSessions)
 
@@ -45,5 +45,24 @@ Total time so far:          23,5h
 18/02/2014 InfoController last functions - 1h
 
 22/02/2012 InfoControllerTest - 0,5h passed, except for those which required presence of data in the database
+--------------------------------------------------------------------------------------------------------
+Total time so far: 36,5h
 
+--Client--
 23/02/2014 Specification for the client. Creation of TradexClient and TradexGraphs projects with dependecies, setting up GIT repos 1,0 h
+
+26/02/2014 MainWindow, JIDE probes (time consuming), JIDE menu, introduction of MenuBuilder basing on an XML document - 2,5h 
+
+01/03/2014 MenuBuilder and tests -1,5h
+
+02/03/2014 MainWindow, Login window and message box - 2h
+
+03/03/2014 MainWindow and login mechanism - 3h
+
+04/03/2014 MainWindow login/logout, loginSensitives - 1,5h
+
+06/03/2014 EquitiesPanel - 1h
+
+08/03/2014 EquitiesPanel - 0,5h
+
+09/03/2014 EquitiesPanel refresh - session cache clear - 0,5h

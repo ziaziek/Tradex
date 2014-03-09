@@ -7,6 +7,7 @@
     <property name="hibernate.connection.url">jdbc:postgresql://192.168.1.79:5432/tradex</property>
     <property name="hibernate.connection.username">przemo</property>
     <property name="hibernate.connection.password">derek</property>
+    <property name="hibernate.cache.use_query_cache">false</property>
     <mapping resource="com/przemo/tradex/data/Transactions.hbm.xml"/>
     <mapping resource="com/przemo/tradex/data/Equities.hbm.xml"/>
     <mapping resource="com/przemo/tradex/data/Orders.hbm.xml"/>
