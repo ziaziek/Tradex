@@ -22,7 +22,7 @@
         </property>
     </class>
     <query name="findEquitiesAtDate">
-        <![CDATA[from EquitiesPriceHistory where recordDate=( select max(recordDate) from EquitiesPriceHistory where recordDate<=:dt)]]>
+        <![CDATA[from EquitiesPriceHistory where equities=:eqid and recordDate=( select max(recordDate) from EquitiesPriceHistory where recordDate<=:dt)]]>
     </query>
     <query name="findEquitiesBetweenDates">
         <![CDATA[from EquitiesPriceHistory where (recordDate>=:df and recordDate<=:dt) and equities=:eqid ]]>

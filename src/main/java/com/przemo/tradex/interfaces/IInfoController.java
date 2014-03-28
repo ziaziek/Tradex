@@ -5,11 +5,9 @@
 package com.przemo.tradex.interfaces;
 
 import java.rmi.Remote;
-import java.util.Calendar;
 import java.util.List;
 import java.util.Set;
 import com.przemo.tradex.data.*;
-import exceptions.SessionBrokeException;
 import java.rmi.RemoteException;
 import java.util.Date;
 import java.util.Map;
@@ -36,7 +34,7 @@ public interface IInfoController extends Remote{
      * @param sessionId
      * @return 
      */
-    Equities requestQuotation(Date date, Object instrument, String sessionId) throws RemoteException;
+    Equities requestQuotation(Date date, com.przemo.tradex.data.Equities instrument, String sessionId) throws RemoteException;
     
     /**
      * Requests activity information, like login, logout ipaddress, etc.
