@@ -68,6 +68,14 @@ public interface IInfoController extends Remote{
      */
     List<EquitiesTypes> requestCurrentEquitiesTypes() throws RemoteException;
    
+    /**
+     * Return a list of orders of the current user
+     * @param sessionId session id
+     * @param active true - only active orders, all orders otherwise
+     * @return
+     * @throws RemoteException 
+     */
+    List<Orders> requestOrders(String sessionId, boolean active) throws RemoteException;
     
     List<OrderTypes> requestAvailableOrderTypes() throws RemoteException;
     

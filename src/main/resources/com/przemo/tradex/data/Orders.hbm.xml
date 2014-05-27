@@ -42,4 +42,7 @@
             <one-to-many class="com.przemo.tradex.data.Transactions" />
         </set>
     </class>
+    <query name="findUserOrders">
+        <![CDATA[from Orders where users=:uid]]>
+    </query>
 </hibernate-mapping>
