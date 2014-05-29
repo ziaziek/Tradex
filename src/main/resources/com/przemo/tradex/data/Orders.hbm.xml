@@ -8,10 +8,10 @@
             <column name="id" />
             <generator class="identity" />
         </id>
-        <many-to-one name="orderTypes" class="com.przemo.tradex.data.OrderTypes" fetch="select">
+        <many-to-one name="orderTypes" class="com.przemo.tradex.data.OrderTypes" fetch="select" lazy="false">
             <column name="order_types_id" not-null="true" />
         </many-to-one>
-        <many-to-one name="equities" class="com.przemo.tradex.data.Equities" fetch="select">
+        <many-to-one name="equities" class="com.przemo.tradex.data.Equities" fetch="select" lazy="false">
             <column name="equities_id" not-null="true" />
         </many-to-one>
         <many-to-one name="users" class="com.przemo.tradex.data.Users" fetch="select">
